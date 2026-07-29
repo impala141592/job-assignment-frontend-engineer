@@ -192,7 +192,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ### API Layer
 - Created a separate API service layer to isolate backend communication from UI components.
-- API requests are handled through a shared request utility.
+- API requests are handled through a shared request utility (`client.ts`).
+- Endpoint-specific logic is grouped into dedicated service modules (`auth.ts`, `articles.ts`, `profiles.ts`).
+- API models are defined separately using TypeScript to keep backend contracts explicit.
 - The backend URL follows the provided assignment environment.
 
 ## Authentication
@@ -205,4 +207,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 (To be added)
 
 ## Trade-offs
- - The API URL is currently fixed according to the provided assignment environment. For a production application, this would typically be configured through environment variables.
+- The API URL is currently fixed according to the provided assignment environment. For a production application, this would typically be configured through environment variables.
+- The API client intentionally omits features such as request caching, retries, and token refresh, as they are outside the scope of the assignment.
