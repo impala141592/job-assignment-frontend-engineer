@@ -184,3 +184,25 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+# Implementation Notes
+
+## Architecture Decisions
+
+### API Layer
+- Created a separate API service layer to isolate backend communication from UI components.
+- API requests are handled through a shared request utility.
+- The backend URL follows the provided assignment environment.
+
+## Authentication
+(To be added)
+
+## Component Structure
+(To be added)
+
+## Testing
+(To be added)
+
+## Trade-offs
+ - The API URL is currently fixed according to the provided assignment environment. For a production application, this would typically be configured through environment variables.
