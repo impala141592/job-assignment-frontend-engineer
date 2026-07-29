@@ -2,38 +2,31 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function Navbar(): JSX.Element {
-  const { user, logout } = useAuth();
+function Navbar() {
+  const { user } = useAuth();
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <Link className="navbar-brand" to="/#">
+        <Link className="navbar-brand" to="/">
           conduit
         </Link>
 
         <ul className="nav navbar-nav pull-xs-right">
           <li className="nav-item">
-            <Link className="nav-link active" to="/#">
+            <Link className="nav-link active" to="/">
               Home
-            </Link>
-          </li>
-
-          <li className="nav-item">
-            <Link className="nav-link" to="/#/editor">
-              <i className="ion-compose" />
-              &nbsp;New Article
-            </Link>
-          </li>
-
-          <li className="nav-item">
-            <Link className="nav-link" to="/#/settings">
-              <i className="ion-gear-a" />
-              &nbsp;Settings
             </Link>
           </li>
 
           {user ? (
             <>
+              <li className="nav-item">
+                <Link className="nav-link" to="/editor">
+                  <i className="ion-compose" />
+                  &nbsp;New Article
+                </Link>
+              </li>
+
               <li className="nav-item">
                 <Link className="nav-link" to={`/profile/${user.username}`}>
                   {user.username}
@@ -48,11 +41,7 @@ function Navbar(): JSX.Element {
               </li>
 
               <li className="nav-item">
-                <Link
-                  className="nav-link"
-                  to="/logout"
-                  onClick={logout}
-                >
+                <Link className="nav-link" to="/logout">
                   Logout
                 </Link>
               </li>
