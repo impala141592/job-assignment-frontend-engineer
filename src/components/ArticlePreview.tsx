@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Article } from "../types/article";
+import FavoriteButton from "./FavoriteButton";
 
 type Props = {
   article: Article;
@@ -33,9 +34,11 @@ export default function ArticlePreview({ article }: Props) {
           </span>
         </div>
 
-        <button className="btn btn-outline-primary btn-sm pull-xs-right">
-          <i className="ion-heart" /> {article.favoritesCount}
-        </button>
+        <FavoriteButton
+          slug={article.slug}
+          favorited={article.favorited}
+          favoritesCount={article.favoritesCount}
+        />
       </div>
 
       <Link
