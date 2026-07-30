@@ -1,8 +1,26 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
 
 export default function LoginRegister() {
   const { pathname } = useLocation();
   const isLogin = pathname === "/login";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const history = useHistory();
+  const { login } = useAuth()
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      await login(email, password);
+      history.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <>
@@ -22,7 +40,7 @@ export default function LoginRegister() {
                 )}
               </p>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 {!isLogin && (
                   <fieldset className="form-group">
                     <input
@@ -38,6 +56,8 @@ export default function LoginRegister() {
                     className="form-control form-control-lg"
                     type="email"
                     placeholder="Email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                   />
                 </fieldset>
 
@@ -46,10 +66,15 @@ export default function LoginRegister() {
                     className="form-control form-control-lg"
                     type="password"
                     placeholder="Password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                   />
                 </fieldset>
 
-                <button className="btn btn-lg btn-primary pull-xs-right">
+                <button
+                  className="btn btn-lg btn-primary pull-xs-right"
+                  type="submit"
+                >
                   {isLogin ? "Sign in" : "Sign up"}
                 </button>
               </form>
