@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getArticle } from "./api/articles";
 import type { Article as ArticleType } from "./types/article";
 import FavoriteButton from "./components/FavoriteButton";
+import FollowButton from "./components/FollowButton";
 
 export default function Article() {
   const { slug } = useParams<{ slug: string }>();
@@ -59,10 +60,10 @@ export default function Article() {
                 </span>
               </div>
 
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round" />
-                &nbsp; Follow {article.author.username}
-              </button>
+              <FollowButton
+                username={article.author.username}
+                following={article.author.following}
+              />
 
               &nbsp;&nbsp;
 
@@ -103,10 +104,10 @@ export default function Article() {
                 </span>
               </div>
 
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round" />
-                &nbsp; Follow {article.author.username}
-              </button>
+              <FollowButton
+                username={article.author.username}
+                following={article.author.following}
+              />
 
               &nbsp;
 
