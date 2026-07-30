@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Article } from "../types/article";
+import Avatar from "./Avatar";
 
 type Props = {
   article: Article;
@@ -9,7 +10,7 @@ export default function ArticleMeta({ article }: Props) {
   return (
     <div className="article-meta">
       <Link to={`/profile/${article.author.username}`}>
-        <img
+        <Avatar
           src={article.author.image}
           alt={article.author.username}
         />

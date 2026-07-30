@@ -5,6 +5,7 @@ import { getProfile } from "./api/profiles";
 import { getArticlesByAuthor } from "./api/articles";
 import type { Profile as ProfileType } from "./types/profile";
 import type { Article } from "./types/article";
+import Avatar from "./components/Avatar";
 
 import FollowButton from "./components/FollowButton";
 import ArticlePreview from "./components/ArticlePreview";
@@ -69,7 +70,7 @@ export default function Profile() {
           <div className="container">
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <img
+                <Avatar
                   src={profile.image}
                   className="user-img"
                   alt={profile.username}
