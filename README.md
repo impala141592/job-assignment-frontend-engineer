@@ -226,6 +226,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
   - Follow and unfollow actions.
   - Profile article lists.
 - Verified behavior for both authenticated and unauthenticated users.
+- Added unit tests using Jest and React Testing Library.
+- Verified component behavior with automated tests, including:
+  - FavoriteButton state updates after favoriting an article.
+  - Application rendering with authentication context support.
 
 ## Trade-offs
 - The API URL is currently fixed according to the provided assignment environment. For a production application, this would typically be configured through environment variables.
