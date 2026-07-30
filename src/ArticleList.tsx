@@ -1,4 +1,27 @@
+import { useEffect, useState } from "react";
+import { getArticles } from "./api/articles";
+import { Article } from "./types/article";
+
 export default function ArticleList() {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const data = await getArticles();
+        setArticles(data.articles);
+      } catch (error) {
+        setError("Failed to load articles");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchArticles();
+  }, []);
+
   return (
     <>
       <div className="home-page">
@@ -15,61 +38,48 @@ export default function ArticleList() {
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item">
-                    <a className="nav-link disabled" href="">
+                    <a className="nav-link disabled" href="#">
                       Your Feed
                     </a>
                   </li>
+
                   <li className="nav-item">
-                    <a className="nav-link active" href="">
+                    <a className="nav-link active" href="#">
                       Global Feed
                     </a>
                   </li>
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/ericsimmons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/ericsimmons" className="author">
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 29
-                  </button>
-                </div>
-                <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              {loading && <p>Loading articles...</p>}
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/albertpai">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/albertpai" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
+              {error && <p>{error}</p>}
+
+              {!loading &&
+                !error &&
+                articles.map((article) => (
+                  <div key={article.slug} className="article-preview">
+                    <div className="article-meta">
+                      <div className="info">
+                        <p className="author">
+                          {article.author.username}
+                        </p>
+
+                        <span className="date">
+                          {new Date(article.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                        <i className="ion-heart" /> {article.favoritesCount}
+                      </button>
+                    </div>
+
+                    <h1>{article.title}</h1>
+                    <p>{article.description}</p>
+                    <span>Read more...</span>
                   </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 32
-                  </button>
-                </div>
-                <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                  <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+                ))}
             </div>
 
             <div className="col-md-3">
@@ -77,29 +87,14 @@ export default function ArticleList() {
                 <p>Popular Tags</p>
 
                 <div className="tag-list">
-                  <a href="" className="tag-pill tag-default">
+                  <a href="#" className="tag-pill tag-default">
                     programming
                   </a>
-                  <a href="" className="tag-pill tag-default">
+                  <a href="#" className="tag-pill tag-default">
                     javascript
                   </a>
-                  <a href="" className="tag-pill tag-default">
-                    emberjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    angularjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
+                  <a href="#" className="tag-pill tag-default">
                     react
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    mean
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    node
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    rails
                   </a>
                 </div>
               </div>
@@ -110,11 +105,13 @@ export default function ArticleList() {
 
       <footer>
         <div className="container">
-          <a href="/#" className="logo-font">
+          <a href="#" className="logo-font">
             conduit
           </a>
+
           <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
+            An interactive learning project from{" "}
+            <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
             licensed under MIT.
           </span>
         </div>
