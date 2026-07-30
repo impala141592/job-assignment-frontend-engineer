@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getArticle } from "./api/articles";
 import type { Article as ArticleType } from "./types/article";
 import FavoriteButton from "./components/FavoriteButton";
 import FollowButton from "./components/FollowButton";
+import ArticleMeta from "./components/ArticleMeta";
 
 export default function Article() {
   const { slug } = useParams<{ slug: string }>();
@@ -43,29 +44,12 @@ export default function Article() {
             <h1>{article.title}</h1>
 
             <div className="article-meta">
-              <Link to={`/profile/${article.author.username}`}>
-                <img src={article.author.image} alt={article.author.username} />
-              </Link>
-
-              <div className="info">
-                <Link
-                  to={`/profile/${article.author.username}`}
-                  className="author"
-                >
-                  {article.author.username}
-                </Link>
-
-                <span className="date">
-                  {new Date(article.createdAt).toDateString()}
-                </span>
-              </div>
+              <ArticleMeta article={article} />
 
               <FollowButton
                 username={article.author.username}
                 following={article.author.following}
               />
-
-              &nbsp;&nbsp;
 
               <FavoriteButton
                 slug={article.slug}
@@ -87,29 +71,12 @@ export default function Article() {
 
           <div className="article-actions">
             <div className="article-meta">
-              <Link to={`/profile/${article.author.username}`}>
-                <img src={article.author.image} alt={article.author.username} />
-              </Link>
-
-              <div className="info">
-                <Link
-                  to={`/profile/${article.author.username}`}
-                  className="author"
-                >
-                  {article.author.username}
-                </Link>
-
-                <span className="date">
-                  {new Date(article.createdAt).toDateString()}
-                </span>
-              </div>
+              <ArticleMeta article={article} />
 
               <FollowButton
                 username={article.author.username}
                 following={article.author.following}
               />
-
-              &nbsp;
 
               <FavoriteButton
                 slug={article.slug}
