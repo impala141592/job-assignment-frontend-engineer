@@ -1,30 +1,76 @@
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getArticle } from "./api/articles";
+import type { Article as ArticleType } from "./types/article";
+import FavoriteButton from "./components/FavoriteButton";
+
 export default function Article() {
+  const { slug } = useParams<{ slug: string }>();
+
+  const [article, setArticle] = useState<ArticleType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArticle() {
+      try {
+        const response = await getArticle(slug);
+        setArticle(response.article);
+      } catch {
+        setError("Failed to load article");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchArticle();
+  }, [slug]);
+
+  if (loading) {
+    return <p>Loading article...</p>;
+  }
+
+  if (error || !article) {
+    return <p>{error || "Article not found"}</p>;
+  }
+
   return (
     <>
       <div className="article-page">
         <div className="banner">
           <div className="container">
-            <h1>How to build webapps that scale</h1>
+            <h1>{article.title}</h1>
 
             <div className="article-meta">
-              <a href="/#/profile/ericsimmons">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
+              <Link to={`/profile/${article.author.username}`}>
+                <img src={article.author.image} alt={article.author.username} />
+              </Link>
+
               <div className="info">
-                <a href="/#/profile/ericsimmons" className="author">
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
+                <Link
+                  to={`/profile/${article.author.username}`}
+                  className="author"
+                >
+                  {article.author.username}
+                </Link>
+
+                <span className="date">
+                  {new Date(article.createdAt).toDateString()}
+                </span>
               </div>
+
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round" />
-                &nbsp; Follow Eric Simons <span className="counter">(10)</span>
+                &nbsp; Follow {article.author.username}
               </button>
+
               &nbsp;&nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart" />
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
+
+              <FavoriteButton
+                slug={article.slug}
+                favorited={article.favorited}
+                favoritesCount={article.favoritesCount}
+              />
             </div>
           </div>
         </div>
@@ -32,9 +78,7 @@ export default function Article() {
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <p>Web development technologies have evolved at an incredible clip over the past few years.</p>
-              <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-              <p>It&lsquo;s a great solution for learning how other frameworks work.</p>
+              <p>{article.body}</p>
             </div>
           </div>
 
@@ -42,74 +86,43 @@ export default function Article() {
 
           <div className="article-actions">
             <div className="article-meta">
-              <a href="/#/profile/ericsimmons">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
+              <Link to={`/profile/${article.author.username}`}>
+                <img src={article.author.image} alt={article.author.username} />
+              </Link>
+
               <div className="info">
-                <a href="/#/profile/ericsimmons" className="author">
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
+                <Link
+                  to={`/profile/${article.author.username}`}
+                  className="author"
+                >
+                  {article.author.username}
+                </Link>
+
+                <span className="date">
+                  {new Date(article.createdAt).toDateString()}
+                </span>
               </div>
+
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round" />
-                &nbsp; Follow Eric Simons
+                &nbsp; Follow {article.author.username}
               </button>
+
               &nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart" />
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
+
+              <FavoriteButton
+                slug={article.slug}
+                favorited={article.favorited}
+                favoritesCount={article.favoritesCount}
+              />
             </div>
           </div>
 
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
-              <form className="card comment-form">
-                <div className="card-block">
-                  <textarea className="form-control" placeholder="Write a comment..." rows={3} />
-                </div>
-                <div className="card-footer">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                  <button className="btn btn-sm btn-primary">Post Comment</button>
-                </div>
-              </form>
-
-              <div className="card">
-                <div className="card-block">
-                  <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                <div className="card-footer">
-                  <a href="/#/profile/jacobschmidt" className="comment-author">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                  </a>
-                  &nbsp;
-                  <a href="/#/profile/jacobschmidt" className="comment-author">
-                    Jacob Schmidt
-                  </a>
-                  <span className="date-posted">Dec 29th</span>
-                </div>
-              </div>
-
-              <div className="card">
-                <div className="card-block">
-                  <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                <div className="card-footer">
-                  <a href="/#/profile/jacobschmidt" className="comment-author">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                  </a>
-                  &nbsp;
-                  <a href="/#/profile/jacobschmidt" className="comment-author">
-                    Jacob Schmidt
-                  </a>
-                  <span className="date-posted">Dec 29th</span>
-                  <span className="mod-options">
-                    <i className="ion-edit" />
-                    <i className="ion-trash-a" />
-                  </span>
-                </div>
-              </div>
+              <p className="text-muted text-center">
+                Comments are not implemented yet.
+              </p>
             </div>
           </div>
         </div>
@@ -121,7 +134,8 @@ export default function Article() {
             conduit
           </a>
           <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
+            An interactive learning project from{" "}
+            <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
             licensed under MIT.
           </span>
         </div>
