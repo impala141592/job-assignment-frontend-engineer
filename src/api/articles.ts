@@ -18,6 +18,12 @@ export async function getArticle(slug: string): Promise<ArticleResponse> {
   return request<ArticleResponse>(`/articles/${slug}`);
 }
 
+export async function getArticlesByAuthor(
+  username: string
+): Promise<ArticlesResponse> {
+  return request<ArticlesResponse>(`/articles?author=${username}`);
+}
+
 export async function favoriteArticle(
   slug: string
 ): Promise<ArticleResponse> {

@@ -1,33 +1,60 @@
 import { useEffect, useState } from "react";
 
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getProfile } from "./api/profiles";
+import { getArticlesByAuthor } from "./api/articles";
 import type { Profile as ProfileType } from "./types/profile";
+import type { Article } from "./types/article";
+
 import FollowButton from "./components/FollowButton";
+import ArticlePreview from "./components/ArticlePreview";
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
 
   const [profile, setProfile] = useState<ProfileType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [articlesLoading, setArticlesLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProfile() {
+      if (!username) return;
+
       try {
         const response = await getProfile(username);
         setProfile(response.profile);
       } catch {
         setError("Failed to load profile");
       } finally {
-        setLoading(false);
+        setProfileLoading(false);
       }
     }
 
     fetchProfile();
   }, [username]);
 
-  if (loading) {
+  useEffect(() => {
+    async function loadArticles() {
+      if (!username) return;
+
+      try {
+        const response = await getArticlesByAuthor(username);
+        setArticles(response.articles);
+      } catch {
+        // Optional: add article-specific error later
+      } finally {
+        setArticlesLoading(false);
+      }
+    }
+
+    loadArticles();
+  }, [username]);
+
+  if (profileLoading) {
     return <p>Loading profile...</p>;
   }
 
@@ -80,40 +107,18 @@ export default function Profile() {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <Link to={`/profile/${profile.username}`}>
-                    <img
-                      src={profile.image}
-                      alt={profile.username}
-                    />
-                  </Link>
-
-                  <div className="info">
-                    <Link
-                      to={`/profile/${profile.username}`}
-                      className="author"
-                    >
-                      {profile.username}
-                    </Link>
-
-                    <span className="date">
-                      Profile articles will be loaded here.
-                    </span>
-                  </div>
-
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 0
-                  </button>
-                </div>
-
-                <div className="preview-link">
-                  <h1>No articles yet</h1>
-                  <p>
-                    Article listing for this profile will be implemented later.
-                  </p>
-                </div>
-              </div>
+              {articlesLoading ? (
+                <p>Loading articles...</p>
+              ) : articles.length === 0 ? (
+                <p>No articles yet.</p>
+              ) : (
+                articles.map((article) => (
+                  <ArticlePreview
+                    key={article.slug}
+                    article={article}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
