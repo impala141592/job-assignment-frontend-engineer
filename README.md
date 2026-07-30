@@ -198,14 +198,37 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - The backend URL follows the provided assignment environment.
 
 ## Authentication
-(To be added)
+- Implemented authentication using a React Context-based approach.
+- User state is stored globally and shared across components through `AuthContext`.
+- Authentication state is persisted using local storage, allowing sessions to survive page refreshes.
+- Protected actions such as favoriting and following are disabled for unauthenticated users.
+- Logout clears the stored session and redirects the user back to the homepage.
 
 ## Component Structure
-(To be added)
+- Reusable UI elements were extracted into dedicated components:
+  - `Navbar` - global navigation and authentication-aware menu items.
+  - `Footer` - shared application footer.
+  - `ArticlePreview` - reusable article card used across article lists and profiles.
+  - `ArticleMeta` - shared author information display.
+  - `FavoriteButton` - handles favorite/unfavorite state and API interactions.
+  - `FollowButton` - handles follow/unfollow state and API interactions.
+  - `Avatar` - provides a reusable author image component with a fallback image.
+- Components are kept focused on presentation and user interaction, while API communication remains inside service modules.
 
 ## Testing
-(To be added)
+- Manually tested the main application flows:
+  - User login and logout.
+  - Authentication persistence after refresh.
+  - Article list loading.
+  - Article detail loading.
+  - Profile loading.
+  - Favorite and unfavorite actions.
+  - Follow and unfollow actions.
+  - Profile article lists.
+- Verified behavior for both authenticated and unauthenticated users.
 
 ## Trade-offs
 - The API URL is currently fixed according to the provided assignment environment. For a production application, this would typically be configured through environment variables.
 - The API client intentionally omits features such as request caching, retries, and token refresh, as they are outside the scope of the assignment.
+- The backend API does not expose follower counts, so follow buttons display follow state only.
+- Registration, comments, article editing, and other features outside the assignment requirements were not implemented.
