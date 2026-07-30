@@ -2,6 +2,7 @@ import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Article from "./Article";
 import ArticleList from "./ArticleList";
 import Editor from "./Editor";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/:slug" exact component={Article} />
         <Route path="/" component={ArticleList} />
       </Switch>
+      <Footer />
     </Router>
   );
 }
