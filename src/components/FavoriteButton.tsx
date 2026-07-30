@@ -3,6 +3,7 @@ import {
   favoriteArticle,
   unfavoriteArticle,
 } from "../api/articles";
+import { useAuth } from "../context/AuthContext";
 
 type Props = {
   slug: string;
@@ -18,8 +19,13 @@ export default function FavoriteButton({
   const [isFavorited, setIsFavorited] = useState(favorited);
   const [count, setCount] = useState(favoritesCount);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   async function handleClick() {
+    if (!user || loading) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -38,11 +44,9 @@ export default function FavoriteButton({
 
   return (
     <button
-      className={`btn btn-sm ${isFavorited
-          ? "btn-primary"
-          : "btn-outline-primary"
+      className={`btn btn-sm ${isFavorited ? "btn-primary" : "btn-outline-primary"
         }`}
-      disabled={loading}
+      disabled={!user || loading}
       onClick={handleClick}
     >
       <i className="ion-heart" /> {count}
