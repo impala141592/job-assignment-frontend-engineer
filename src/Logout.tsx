@@ -1,17 +1,15 @@
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+
 export default function Logout() {
-  return (
-    <>
-      <footer>
-        <div className="container">
-          <a href="/#" className="logo-font">
-            conduit
-          </a>
-          <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
-            licensed under MIT.
-          </span>
-        </div>
-      </footer>
-    </>
-  );
+  const { logout } = useAuth();
+  const history = useHistory();
+
+  useEffect(() => {
+    logout();
+    history.push("/");
+  }, [logout, history]);
+
+  return null;
 }
