@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getArticles } from "./api/articles";
 import { Article } from "./types/article";
+import ArticlePreview from "./components/ArticlePreview";
 
 export default function ArticleList() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -58,27 +59,10 @@ export default function ArticleList() {
               {!loading &&
                 !error &&
                 articles.map((article) => (
-                  <div key={article.slug} className="article-preview">
-                    <div className="article-meta">
-                      <div className="info">
-                        <p className="author">
-                          {article.author.username}
-                        </p>
-
-                        <span className="date">
-                          {new Date(article.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                        <i className="ion-heart" /> {article.favoritesCount}
-                      </button>
-                    </div>
-
-                    <h1>{article.title}</h1>
-                    <p>{article.description}</p>
-                    <span>Read more...</span>
-                  </div>
+                  <ArticlePreview
+                    key={article.slug}
+                    article={article}
+                  />
                 ))}
             </div>
 
