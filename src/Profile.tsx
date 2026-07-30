@@ -1,4 +1,40 @@
+import { useEffect, useState } from "react";
+
+import { Link, useParams } from "react-router-dom";
+import { getProfile } from "./api/profiles";
+import type { Profile as ProfileType } from "./types/profile";
+import FollowButton from "./components/FollowButton";
+
 export default function Profile() {
+  const { username } = useParams<{ username: string }>();
+
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await getProfile(username);
+        setProfile(response.profile);
+      } catch {
+        setError("Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProfile();
+  }, [username]);
+
+  if (loading) {
+    return <p>Loading profile...</p>;
+  }
+
+  if (error || !profile) {
+    return <p>{error || "Profile not found"}</p>;
+  }
+
   return (
     <>
       <div className="profile-page">
@@ -6,16 +42,20 @@ export default function Profile() {
           <div className="container">
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="user-img" />
-                <h4>Eric Simons</h4>
-                <p>
-                  Cofounder @GoThinkster, lived in Aol&lsquo;s HQ for a few months, kinda looks like Peeta from the
-                  Hunger Games
-                </p>
-                <button className="btn btn-sm btn-outline-secondary action-btn">
-                  <i className="ion-plus-round" />
-                  &nbsp; Follow Eric Simons
-                </button>
+                <img
+                  src={profile.image}
+                  className="user-img"
+                  alt={profile.username}
+                />
+
+                <h4>{profile.username}</h4>
+
+                <p>{profile.bio}</p>
+
+                <FollowButton
+                  username={profile.username}
+                  following={profile.following}
+                />
               </div>
             </div>
           </div>
@@ -31,6 +71,7 @@ export default function Profile() {
                       My Articles
                     </a>
                   </li>
+
                   <li className="nav-item">
                     <a className="nav-link" href="">
                       Favorited Articles
@@ -41,50 +82,37 @@ export default function Profile() {
 
               <div className="article-preview">
                 <div className="article-meta">
-                  <a href="/#/profile/ericsimmons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/ericsimmons" className="author">
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 29
-                  </button>
-                </div>
-                <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+                  <Link to={`/profile/${profile.username}`}>
+                    <img
+                      src={profile.image}
+                      alt={profile.username}
+                    />
+                  </Link>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/albertpai">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
                   <div className="info">
-                    <a href="/#/profile/albertpai" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
+                    <Link
+                      to={`/profile/${profile.username}`}
+                      className="author"
+                    >
+                      {profile.username}
+                    </Link>
+
+                    <span className="date">
+                      Profile articles will be loaded here.
+                    </span>
                   </div>
+
                   <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 32
+                    <i className="ion-heart" /> 0
                   </button>
                 </div>
-                <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                  <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                  <ul className="tag-list">
-                    <li className="tag-default tag-pill tag-outline">Music</li>
-                    <li className="tag-default tag-pill tag-outline">Song</li>
-                  </ul>
-                </a>
+
+                <div className="preview-link">
+                  <h1>No articles yet</h1>
+                  <p>
+                    Article listing for this profile will be implemented later.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -96,8 +124,10 @@ export default function Profile() {
           <a href="/#" className="logo-font">
             conduit
           </a>
+
           <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
+            An interactive learning project from{" "}
+            <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
             licensed under MIT.
           </span>
         </div>
